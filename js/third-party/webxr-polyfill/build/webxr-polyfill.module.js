@@ -1928,7 +1928,9 @@ var getChromeVersion = function () {
 }();
 var isChromeWithoutDeviceMotion = function () {
   var value = false;
-  if (getChromeVersion() === 65) {
+  if (isIOS()) {
+    value = true;
+  } else if (getChromeVersion() === 65) {
     var match = navigator.userAgent.match(/.*Chrome\/([0-9\.]*)/);
     if (match) {
       var _match$1$split = match[1].split('.'),
