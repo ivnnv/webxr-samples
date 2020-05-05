@@ -1928,9 +1928,7 @@ var getChromeVersion = function () {
 }();
 var isChromeWithoutDeviceMotion = function () {
   var value = false;
-  if (isIOS()) {
-    value = true;
-  } else if (getChromeVersion() === 65) {
+  if (getChromeVersion() === 65) {
     var match = navigator.userAgent.match(/.*Chrome\/([0-9\.]*)/);
     if (match) {
       var _match$1$split = match[1].split('.'),
@@ -1942,6 +1940,13 @@ var isChromeWithoutDeviceMotion = function () {
       value = parseInt(branch, 10) === 3325 && parseInt(build, 10) < 148;
     }
   }
+  return function () {
+    return value;
+  };
+}();
+var isSafariWithoutDeviceMotion = function () {
+  var value = false;
+  value = isIOS() && isSafari() && navigator.userAgent.indexOf('13_4') !== -1;
   return function () {
     return value;
   };
@@ -3739,7 +3744,7 @@ function FusionPoseSensor(kFilter, predictionTime, yawOnly, isDebug) {
   this.isIOS = isIOS();
   var chromeVersion = getChromeVersion();
   this.isDeviceMotionInRadians = !this.isIOS && chromeVersion && chromeVersion < 66;
-  this.isWithoutDeviceMotion = isChromeWithoutDeviceMotion();
+  this.isWithoutDeviceMotion = isChromeWithoutDeviceMotion() || isSafariWithoutDeviceMotion();
   this.filterToWorldQ = new Quaternion();
   if (isIOS()) {
     this.filterToWorldQ.setFromAxisAngle(new Vector3(1, 0, 0), Math.PI / 2);
